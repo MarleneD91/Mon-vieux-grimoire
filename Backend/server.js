@@ -1,6 +1,6 @@
 
-const http = require('http');
-const app = require('./app');
+const http = require('http'); // Import node http package
+const app = require('./app'); 
 
 // Return valid port, as a number or a string
 const normalizePort = val => {
@@ -38,7 +38,7 @@ const errorHandler = error => {
   }
 };
 
-const server = http.createServer(app);
+const server = http.createServer(app); // Called by each req received
 
 // 
 server.on('error', errorHandler);
@@ -48,4 +48,4 @@ server.on('listening', () => {
   console.log('Listening on ' + bind);
 });
 
-server.listen(port);
+server.listen(port); // Listen req at port
