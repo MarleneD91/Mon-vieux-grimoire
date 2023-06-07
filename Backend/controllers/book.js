@@ -49,4 +49,7 @@ exports.readBookRating = (req, res, next) => {
         .catch(error => res.status(400).json({error}))
 }
 
-
+//POST rating for one book
+exports.createBookRating = (req, res, next) => {
+    //work on it ! needs auth too.
+}
