@@ -8,7 +8,7 @@ const bookRoutes = require('./routes/book');
 const userRoutes = require('./routes/user');
 
 // Connect API to db
-mongoose.connect('mongodb+srv://Admin:wajyG0ZrVwJz0aR2@cluster-vieux-grimoire.u07jbtp.mongodb.net/?retryWrites=true&w=majority',
+mongoose.connect('mongodb+srv://Admin:<password>@cluster-vieux-grimoire.u07jbtp.mongodb.net/?retryWrites=true&w=majority',
 { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
