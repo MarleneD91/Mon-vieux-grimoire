@@ -14,6 +14,11 @@ mongoose.connect('mongodb+srv://Admin:<password>@cluster-vieux-grimoire.u07jbtp.
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
+//Add body-parser in order to read the req body (for POST/PUT req)
+const bodyParser = require('body-parser');
+//Create application/json parser
+const jsonParser = bodyParser.json();
+
 // CORS - Add headers
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -22,9 +27,8 @@ app.use((req, res, next) => {
     next();
   });
 
-app.use('/api/books', bookRoutes);
-
-app.use('/api/auth', userRoutes);
+app.use('/api/books', jsonParser, bookRoutes);
+app.use('/api/auth', jsonParser, userRoutes);
 
 module.exports = app; // export app - access from other files
   

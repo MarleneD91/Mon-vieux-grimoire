@@ -6,9 +6,14 @@ const Book = require('../models/book');
 
 // POST route ctrl
 exports.createBook = (req,res, next) => {
-    delete req.body._id;
+    //delete req.body._id;
+    
     const book = new Book ({ // create a new book instance
-        ...req.body // spread operator: used to copy all req.body elements
+        /*userId: req.auth.userId,
+        image: req.body.image,
+        averageRating: 2, *///WORK ON IT LATER
+        ...req.body, // spread operator: used to copy all req.body elements
+     
     });
     book.save() // save the new book element in db - returns a Promise
         .then(() => res.status(201).json({message:"Livre enregistré !"})) // Send succes res

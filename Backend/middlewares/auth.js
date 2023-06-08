@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
-const { models } = require('mongoose');
+//const { models } = require('mongoose');
 
-const auth = (req, res, next) => {
+module.exports = (req, res, next) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
         const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
@@ -9,9 +9,8 @@ const auth = (req, res, next) => {
         req.auth = {
             userId: userId
         };
+        next();
     } catch(err) {
-        res.status(401).json({error})
+        res.status(403).json({error: 'Unauthorized request'})
     }
 };
-
-module.export = auth;

@@ -16,22 +16,3 @@ const bookSchema = mongoose.Schema({
 //bookRating Schema ??
 
 module.exports = mongoose.model('Book', bookSchema);
-
-
-/*BookItem.propTypes = {
-    size: PropTypes.number.isRequired,
-    book: PropTypes.shape({
-      id: PropTypes.string,
-      userId: PropTypes.string,
-      title: PropTypes.string,
-      author: PropTypes.string,
-      year: PropTypes.number,
-      imageUrl: PropTypes.string,
-      genre: PropTypes.string,
-      ratings: PropTypes.arrayOf(PropTypes.shape({
-        userId: PropTypes.string,
-        grade: PropTypes.number,
-      })),
-      averageRating: PropTypes.number,
-    }).isRequired,
-  };*/

@@ -7,8 +7,8 @@ const User = require('../models/user');
 
 
 // Create a new account
-exports.signUp = (req, res, next) => {
-    bcrypt.hash(req.body.password)
+exports.signup = (req, res, next) => {
+    bcrypt.hash(req.body.password, 10)
         .then(hash => {
             const user = new User({
                 email: req.body.email,
@@ -18,11 +18,11 @@ exports.signUp = (req, res, next) => {
                 .then(() => res.status(201).json({message:'Utilisateur créé!'}))
                 .catch(error => res.status(400).json({error}));
         })
-        .catch(error => res.satus(500).json({error}));
+        .catch(error => res.status(500).json({error}));
 };
 
 // Log in
-exports.logIn = (req, res, next) => {
+exports.login = (req, res, next) => {
     User.findOne({email: req.body.email})
         .then(user => {
             if(!user){
