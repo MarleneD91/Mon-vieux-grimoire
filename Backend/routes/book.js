@@ -2,10 +2,13 @@
 
 const express = require ('express');
 
+//Middlewares
 const auth = require('../middlewares/auth');
+const multer = require('../middlewares/multer-config');
 
 const router = express.Router();
 
+//Controllers
 const bookCtrl = require('../controllers/book');
 
 /*//Add body-parser in order to read the req body (for POST/PUT req)
@@ -24,9 +27,9 @@ router.get('/bestrating', bookCtrl.readBookRating);
 
 // AUTH REQUIRED FOR THE FOLLOWING ROUTES (need to be created):
 // Create a new book  
-router.post('/', /*jsonParser,*/ auth, bookCtrl.createBook);
+router.post('/', /*jsonParser,*/ auth, multer, bookCtrl.createBook);
 // Update book info
-router.put('/:id', /*jsonParser,*/ auth, bookCtrl.updateBook);
+router.put('/:id', /*jsonParser,*/ auth, multer, bookCtrl.updateBook);
 // Delete book by id
 router.delete('/:id', auth, bookCtrl.deleteBook);
 // Create a rating for an identified book

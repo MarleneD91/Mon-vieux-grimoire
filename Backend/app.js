@@ -1,21 +1,30 @@
 const express = require('express'); // import express
 const app = express(); // create app
-
 const mongoose = require('mongoose'); // to connect w/ Mongodb easily
-
-// Import routes
+//Add body-parser in order to read the req body (for POST/PUT req)
+const bodyParser = require('body-parser');
+/*const urlencodedParser = bodyParser.urlencoded({ extended: false });*/
+//Import routes
 const bookRoutes = require('./routes/book');
 const userRoutes = require('./routes/user');
+//Path access
+const path = require('path');
+//Environmental variables 
+require('dotenv').config();
+
 
 // Connect API to db
-mongoose.connect('mongodb+srv://Admin:<password>@cluster-vieux-grimoire.u07jbtp.mongodb.net/?retryWrites=true&w=majority',
+mongoose.connect("mongodb+srv://" 
+  + process.env.DB_USER_NAME
+  + ":" + process.env.DB_PASSWORD
+  +"@" + process.env.DB_NAME 
+  + "/?retryWrites=true&w=majority",
 { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
-//Add body-parser in order to read the req body (for POST/PUT req)
-const bodyParser = require('body-parser');
+
 //Create application/json parser
 const jsonParser = bodyParser.json();
 
@@ -27,8 +36,11 @@ app.use((req, res, next) => {
     next();
   });
 
-app.use('/api/books', jsonParser, bookRoutes);
+//Handle routes
+app.use('/api/books', jsonParser, /*urlencodedParser,*/ bookRoutes);
 app.use('/api/auth', jsonParser, userRoutes);
+//Handle image path
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 module.exports = app; // export app - access from other files
   
