@@ -2,7 +2,7 @@
 const http = require('http'); // Import node http package
 const app = require('./app'); 
 
-// Return valid port, as a number or a string
+//Return valid port, as a number or a string
 const normalizePort = val => {
   const port = parseInt(val, 10);
   if (isNaN(port)) {
@@ -15,9 +15,11 @@ const normalizePort = val => {
 };
 
 const port = normalizePort(process.env.PORT || '4000');
+
+//Express app is running on
 app.set('port', port);
 
-// Search for errors and handle them in an appropriate way. 
+//Search for errors and handle them in an appropriate way. 
 const errorHandler = error => {
   if (error.syscall !== 'listen') {
     throw error;
@@ -40,7 +42,7 @@ const errorHandler = error => {
 
 const server = http.createServer(app); // Called by each req received
 
-// 
+//Event listener 
 server.on('error', errorHandler);
 server.on('listening', () => {
   const address = server.address();
@@ -48,4 +50,4 @@ server.on('listening', () => {
   console.log('Listening on ' + bind);
 });
 
-server.listen(port); // Listen req at port
+server.listen(port); //Listen req at port

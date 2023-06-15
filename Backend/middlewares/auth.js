@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-//const { models } = require('mongoose');
 
 module.exports = (req, res, next) => {
     try {
@@ -9,6 +8,7 @@ module.exports = (req, res, next) => {
         req.auth = {
             userId: userId
         };
+        console.log (req.auth.userId);
         next();
     } catch(err) {
         res.status(403).json({error: 'Unauthorized request'})
