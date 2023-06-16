@@ -38,6 +38,7 @@ exports.updateBook = (req, res, next) => {
     delete bookObject._userId;
     Book.findOne({_id: req.params.id})
         .then(book => {
+            console.log("Hello");
             if (book.userId != req.auth.userId) {
                 res.status(401).json({ message : 'Not authorized'});
             } else {
@@ -101,32 +102,31 @@ exports.createBookRating = (req, res, next) => {
 
             //Get all users that have rated the selected book
             const bookRatings = book.ratings; // rating array of selected book
-            console.log(bookRatings);
-
+            
             const ratingUsers = bookRatings.map(ratings => ratings.userId); // array of users who already rated the book 
-            console.log (ratingUsers);
-            console.log(req.auth.userId);
 
             //then find if the current user has already rated the selected book
             if(ratingUsers.includes(req.auth.userId)){
-                return res.status(401).json({message: 'Vous avez déjà noté ce livre!'});
+                res.status(401).json({message: 'Vous avez déjà noté ce livre!'}); 
             } else {
-                //add the new rating to the rating array of the selected book
-                bookRatings.push({userId: req.auth.userId, grade: req.body.rating});
-                console.log(bookRatings);
-                const allRatings = bookRatings.map(ratings => ratings.grade);
-
-                let ratingsSum = 0;
-                let newAverageRating = 0;
-                for (i=0 ; i < allRatings.length; i+1){
-                    ratingsSum += allRatings[i];
+                //Define the function to calculate the new ratings average
+                const calcAverage = (array) => {
+                    let ratingsSum = 0;
+                    let newAverageRating = 0;
+                    for (i=0 ; i < array.length; i+1){
+                    ratingsSum += array[i];
                     newAverageRating = (ratingsSum / allRatings.length).toFixed(1) ;
-                }
-                
-                book.averageRating = newAverageRating;
-            
+                }};
+                //add the new rating to the rating array of the selected book
+                const newRating = ({userId: req.auth.userId, grade: req.body.rating});
+                bookRatings.push(newRating);
+                console.log(bookRatings);
+                //Apply the function to get new ratings average                
+                const allRatings = bookRatings.map(ratings => ratings.grade);
+                const newAverageRating = calcAverage(allRatings);
+                     
 
-            book.save()
+            Book.updateOne({_id: req.params.id},{ratings: bookRatings, averageRating: newAverageRating, _id: req.params.id})
                 .then (() => res.status(201).json({message: "Note ajoutée!"}))
                 .catch (error => res.status(400).json({error}));
             }})

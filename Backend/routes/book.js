@@ -2,14 +2,14 @@
 
 const express = require ('express');
 const router = express.Router();
-
+//Controllers
+const bookCtrl = require('../controllers/book');
 //Middlewares
 const auth = require('../middlewares/auth');
 const multer = require('../middlewares/multer-config');
 const resizeImg = require('../middlewares/resizeImg');//Img resizing middleware (using sharp)
 
-//Controllers
-const bookCtrl = require('../controllers/book');
+
 
 
 
