@@ -11,7 +11,7 @@ exports.createBook = (req,res, next) => {
     const bookObject = JSON.parse(req.body.book);
     delete bookObject._id;
     delete bookObject._userId;
-    console.log(req.auth.userId)
+    console.log(req.auth.userId);
 
     const book = new Book ({ // create a new book instance
         ...bookObject,

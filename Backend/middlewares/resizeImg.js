@@ -7,7 +7,7 @@ const resizeImg = (req, res,next) => {
     const filename = req.file.filename.replace(/\.[^.]*$/,'');
     
     sharp(req.file.path)
-     .resize(300, 300)
+     .resize(300, 500, 'inside')
      .webp({ quality: 90 })
      .toFile(path.join('images',`resized-${filename}.webp`))
      .then(() => {
