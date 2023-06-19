@@ -8,7 +8,7 @@ module.exports = (req, res, next) => {
         req.auth = {
             userId: userId
         };
-        console.log (req.auth.userId);
+        //console.log (req.auth.userId);//ERROR AXIOS !
         next();
     } catch(err) {
         res.status(403).json({error: 'Unauthorized request'})

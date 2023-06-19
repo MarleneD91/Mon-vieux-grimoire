@@ -38,13 +38,24 @@ exports.updateBook = (req, res, next) => {
     delete bookObject._userId;
     Book.findOne({_id: req.params.id})
         .then(book => {
-            console.log("Hello");
+            //console.log("Hello");
             if (book.userId != req.auth.userId) {
                 res.status(401).json({ message : 'Not authorized'});
             } else {
-                Book.updateOne({_id: req.params.id}, {...bookObject, _id: req.params.id})
-                    .then (() => res.status(200).json({message: "Livre modifié!"}))
-                    .catch (error => res.status(400).json({error}));
+                if(req.file){
+                    //If the req contains a new file, in order to supp the old one :
+                    const oldfile = book.imageUrl.split('/images/')[1];
+                    fs.unlink(`images/${oldfile}`, () => {
+                        Book.updateOne({_id: req.params.id}, {...bookObject, _id: req.params.id})
+                        .then (() => res.status(200).json({message: "Livre modifié!"}))
+                        .catch (error => res.status(400).json({error}));
+                    });
+                }else{
+                    //If there is no new file, just update the other book info
+                    Book.updateOne({_id: req.params.id}, {...bookObject, _id: req.params.id})
+                        .then (() => res.status(200).json({message: "Livre modifié!"}))
+                        .catch (error => res.status(400).json({error}));
+                };
             }
         })
         .catch((error) => {
@@ -99,35 +110,40 @@ exports.createBookRating = (req, res, next) => {
  
     Book.findOne({_id: req.params.id})
         .then(book => {
-
             //Get all users that have rated the selected book
             const bookRatings = book.ratings; // rating array of selected book
-            
+            console.log(bookRatings);
             const ratingUsers = bookRatings.map(ratings => ratings.userId); // array of users who already rated the book 
-
             //then find if the current user has already rated the selected book
+            console.log(ratingUsers);
+            console.log(req.auth.userId);
             if(ratingUsers.includes(req.auth.userId)){
-                res.status(401).json({message: 'Vous avez déjà noté ce livre!'}); 
+                return res.status(401).json({message: 'Vous avez déjà noté ce livre!'}); 
             } else {
-                //Define the function to calculate the new ratings average
+
+                //Define function to calculate the new average rating
                 const calcAverage = (array) => {
-                    let ratingsSum = 0;
-                    let newAverageRating = 0;
-                    for (i=0 ; i < array.length; i+1){
-                    ratingsSum += array[i];
-                    newAverageRating = (ratingsSum / allRatings.length).toFixed(1) ;
-                }};
-                //add the new rating to the rating array of the selected book
+                    var ratingsSum = 0;
+                    var numberOfRatings = 0;
+                    array.forEach(function(item, index) {
+                        ratingsSum += item;
+                        numberOfRatings++;
+                    });
+                    return ratingsSum / numberOfRatings;
+                };
+
+                //Save the new req rating as an object
                 const newRating = ({userId: req.auth.userId, grade: req.body.rating});
+                //Add the new rating to the book ratings array of obj
                 bookRatings.push(newRating);
                 console.log(bookRatings);
                 //Apply the function to get new ratings average                
                 const allRatings = bookRatings.map(ratings => ratings.grade);
+                console.log(allRatings);
                 const newAverageRating = calcAverage(allRatings);
-                     
-
+           
             Book.updateOne({_id: req.params.id},{ratings: bookRatings, averageRating: newAverageRating, _id: req.params.id})
-                .then (() => res.status(201).json({message: "Note ajoutée!"}))
+                .then (() => res.status(201).json(book))//!!! In order to make front work well, send the book back, not a msg !
                 .catch (error => res.status(400).json({error}));
             }})
         .catch (error => res.status(400).json({error}))

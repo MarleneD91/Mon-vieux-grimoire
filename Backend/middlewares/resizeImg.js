@@ -4,6 +4,9 @@ const path = require('path');
 const fs = require('fs');
 
 const resizeImg = (req, res,next) => {
+    if(!req.file) {
+        next();
+    } else {
     const filename = req.file.filename.replace(/\.[^.]*$/,'');
     
     sharp(req.file.path)
@@ -18,7 +21,7 @@ const resizeImg = (req, res,next) => {
         //return res.status(200).json({message:'Livre créé'});
     })
      .catch(err => res.status(400).json({err}))
-
+    }
 };
 
 module.exports = resizeImg;
