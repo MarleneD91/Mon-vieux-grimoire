@@ -140,7 +140,7 @@ exports.createBookRating = (req, res, next) => {
                 //Apply the function to get new ratings average                
                 const allRatings = bookRatings.map(ratings => ratings.grade);
                 console.log(allRatings);
-                const newAverageRating = calcAverage(allRatings);
+                const newAverageRating = calcAverage(allRatings).toFixed(2);
            
             Book.updateOne({_id: req.params.id},{ratings: bookRatings, averageRating: newAverageRating, _id: req.params.id})
                 .then (() => res.status(201).json(book))//!!! In order to make front work well, send the book back, not a msg !
