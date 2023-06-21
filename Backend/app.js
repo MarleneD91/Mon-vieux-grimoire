@@ -2,6 +2,12 @@ const express = require('express'); // import express
 const app = express(); // create app
 const mongoose = require('mongoose'); // to connect w/ Mongodb easily
 
+// Helmet can help protect app from some well-known web vulnerabilities by setting HTTP headers appropriately
+// = collection of several smaller middleware functions that set security-related HTTP response headers
+const helmet = require('helmet');
+// Express middleware which sanitizes user-supplied data to prevent MongoDB Operator Injection
+const mongoSanitize = require('express-mongo-sanitize');
+
 //Import routes
 const bookRoutes = require('./routes/book');
 const userRoutes = require('./routes/user');
@@ -23,6 +29,10 @@ mongoose.connect("mongodb+srv://"
 
 // Extract body req as JSON elements
 app.use(express.json());
+
+//Add helmet & mongo-sanitize (SECURITY modules)
+app.use(helmet());
+app.use(mongoSanitize());
 
 // CORS - Add headers
 app.use((req, res, next) => {

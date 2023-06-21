@@ -1,4 +1,4 @@
-/**********************CONTROLLER FILE**********************/ 
+/**********************CONTROLLERS FILE**********************/ 
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
