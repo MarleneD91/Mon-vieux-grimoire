@@ -30,19 +30,17 @@ mongoose.connect("mongodb+srv://"
 // Extract body req as JSON elements
 app.use(express.json());
 
-//Add helmet & mongo-sanitize (SECURITY modules)
-app.use(helmet());
-app.use(mongoSanitize());
-
 // Add headers to res objects - comm° (b) origins
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin'); // Prevent  cors error blocking img 
-    //- The error stems from a security mechanism that browsers implement = same-origin policy.
     next();
   });
+
+//Add helmet & mongo-sanitize (SECURITY modules)
+app.use(helmet({crossOriginEmbedderPolicy: false})); //Prevent Helmet from setting the Cross-Origin-Embedder-Policy header - in order to get the images!
+app.use(mongoSanitize());
 
 //Handle routes
 app.use('/api/books', bookRoutes);
