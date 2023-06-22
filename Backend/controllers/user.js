@@ -30,8 +30,6 @@ exports.login = (req, res, next) => {
             };
             bcrypt.compare(req.body.password, user.password)
                 .then(same => {
-                    console.log(req.body.password);
-                    console.log(user.password);
                     if(!same) {
                         return res.status(401).json({message: 'Identifiant et/ou mot de passe incorrect(s).'})
                     };
