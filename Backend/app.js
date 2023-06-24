@@ -39,7 +39,7 @@ app.use((req, res, next) => {
   });
 
 //Add helmet & mongo-sanitize (SECURITY modules)
-app.use(helmet({crossOriginEmbedderPolicy: false})); //Prevent Helmet from setting the Cross-Origin-Embedder-Policy header - in order to get the images!
+app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } })); //Prevent Helmet from setting the Cross-Origin-Embedder-Policy header - in order to get the images!
 app.use(mongoSanitize());
 
 //Handle routes
