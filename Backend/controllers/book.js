@@ -105,7 +105,6 @@ exports.bestRatedBooks = (req, res, next) => {
 
 //POST rating for one book
 exports.createBookRating = (req, res, next) => {
- 
     Book.findOne({_id: req.params.id})
         .then(book => {
             //Get all users that have rated the selected book
