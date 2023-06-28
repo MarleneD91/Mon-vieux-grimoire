@@ -1,4 +1,4 @@
-/**********************CONTROLLERS FILE**********************/ 
+/**********************CONTROLLER**********************/ 
 
 //const resizeImg = require('../middlewares/resizeImg');
 const Book = require('../models/book');
