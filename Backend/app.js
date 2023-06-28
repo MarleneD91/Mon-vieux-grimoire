@@ -16,6 +16,15 @@ const path = require('path');
 //Environmental variables 
 require('dotenv').config();
 
+//Rate Limit : Limit number of requests for a set time
+const rateLimit = require('express-rate-limit');
+const limiter = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	max: 50, // Limit each IP to 50 req. per `window` (here, per 15 minutes)
+	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+})
+
 // Connect API to db
 mongoose.connect("mongodb+srv://" 
   + process.env.DB_USER_NAME
@@ -41,6 +50,8 @@ app.use((req, res, next) => {
 //Add helmet & mongo-sanitize (SECURITY modules)
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } })); //Prevent Helmet from setting the Cross-Origin-Embedder-Policy header - in order to get the images!
 app.use(mongoSanitize());
+//Apply the rate limiting middleware to all requests
+app.use(limiter);
 
 //Handle routes
 app.use('/api/books', bookRoutes);
